@@ -1,4 +1,4 @@
-# Snappy - Chat Application
+# MemoriesOfAll
 
 Memories is application build with MERN Stack.
 It helps to save memories of people and share it to the people giving them the ability to like and comment .
