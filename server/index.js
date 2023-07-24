@@ -29,7 +29,9 @@ app.get("/", (_, res) => res.send("Hello"));
 const PORT = process.env.PORT || 5000;
 mongoose.set("strictQuery", true);
 mongoose
-  .connect(process.env.CONNECTION_URL)
+  .connect(
+    "mongodb+srv://now:nowhere@atlascluster.vq4heuo.mongodb.net/Memories?retryWrites=true&w=majority"
+  )
   .then(console.log("Connected to MongoDB Database"))
   .then(() =>
     app.listen(PORT, () => console.log(`Server running on port: ${PORT}`))
