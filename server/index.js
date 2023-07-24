@@ -10,17 +10,18 @@ dotenv.config();
 
 const app = express();
 
-app.set("trust proxy", true);
+app.set("trust proxy", true); // Set trust proxy before using rate limit middleware
 
-app.use(
-  rateLimit({
-    windowMs: 1 * 60 * 1000, // 1 minuite
-    max: 30,
-  })
-);
 app.use(cors());
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+
+app.use(
+  rateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute
+    max: 30,
+  })
+);
 
 app.use("/posts", PostRoutes);
 app.use("/user", UserRoutes);
@@ -34,7 +35,7 @@ mongoose
   .connect(
     "mongodb+srv://now:nowhere@atlascluster.vq4heuo.mongodb.net/Memories?retryWrites=true&w=majority"
   )
-  .then(console.log("Connected to MongoDB Database"))
+  .then(() => console.log("Connected to MongoDB Database"))
   .then(() =>
     app.listen(PORT, () => console.log(`Server running on port: ${PORT}`))
   )
