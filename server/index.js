@@ -10,16 +10,30 @@ dotenv.config();
 
 const app = express();
 
+// Function to extract the client IP address from the request headers
+function getClientIp(req) {
+  // First, check the 'X-Forwarded-For' header
+  const xForwardedFor = req.header("X-Forwarded-For");
+  if (xForwardedFor) {
+    return xForwardedFor.split(",")[0].trim();
+  }
+
+  // If 'X-Forwarded-For' is not available, use 'req.connection.remoteAddress'
+  return req.connection.remoteAddress;
+}
+
+// Use custom keyGenerator function to extract client IP for rate limiting
+app.use(
+  rateLimit({
+    windowMs: 12 * 60 * 1000, // 1 minute
+    max: 30,
+    keyGenerator: (req) => getClientIp(req), // Use the custom function to get the client IP
+  })
+);
+
 app.use(cors());
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
-
-app.use(
-  rateLimit({
-    windowMs: 5 * 60 * 1000, // 5 minute
-    max: 30,
-  })
-);
 
 app.use("/posts", PostRoutes);
 app.use("/user", UserRoutes);
