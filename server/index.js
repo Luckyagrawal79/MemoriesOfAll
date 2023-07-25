@@ -10,15 +10,13 @@ dotenv.config();
 
 const app = express();
 
-app.set("trust proxy", true); // Set trust proxy before using rate limit middleware
-
 app.use(cors());
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
 app.use(
   rateLimit({
-    windowMs: 1 * 60 * 1000, // 1 minute
+    windowMs: 5 * 60 * 1000, // 5 minute
     max: 30,
   })
 );
